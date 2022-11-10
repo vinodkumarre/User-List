@@ -1,0 +1,33 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin: auto;
+    width: 200px;  
+}
+.card h4{
+    padding-left: 15px;
+}
+.container{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+
+}
+.add_button{
+    width: 100%;
+    padding: 15px;
+    background-color: cyan;
+    border: none;
+}
+.add_button:hover{
+    cursor: pointer;
+    background-color: whitesmoke;
+    border: none;
+}
+  
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+  
+img{
+    width: 100%;
+}
