@@ -1,11 +1,11 @@
-import React from 'react';
-import './App.css';
-import Data from './components/DataRender'; 
+import React from "react";
+import "./App.css";
+import List from "./components/ListView"; 
 const App =  ()=> {
   
   return (
     <>
-      <Data/>
+      <List/>
       
     </>
   );
