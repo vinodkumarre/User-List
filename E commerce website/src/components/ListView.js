@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ApiCall from "./ApiCall";
+// import EditPage from "./Edit";
 
 const useStyles = makeStyles({
   root: {
@@ -20,35 +21,42 @@ const useStyles = makeStyles({
     margin: "25px auto",
     width: "80% !important",
     border: "1px solid black",
+    position: "fixed",
+    left: "50%",
+    transform: "translateX(-50%)",
+    height: "80vh !important",
 
   },
   tableHead: {
-    position: "sticky",
-    top: "20px",
-    border: "2px solid black",
+    position: "sticky !important",
+    backgroundColor: "white !important",
+    zIndex: "2",
+    top: "0vh",
 
   },
 });
 function List() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [data] = ApiCall(" https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json");
-  useEffect(() => {
-    localStorage.setItem("data", JSON.stringify(data));
-  }, [data]);
-  const list = JSON.parse(localStorage.getItem("data"));
-  console.log(list);
+  const [data] = ApiCall("https://node-postgres-sample.herokuapp.com/users");
+  // useEffect(() => {
+  //   localStorage.setItem("data", JSON.stringify(data));
+  // }, [data]);
+  // const list = JSON.parse(localStorage.getItem("data"));
+  console.log(data);
   const buttonServer = (lent) => {
-    console.log(lent);
-    navigate("/edit");
+    console.log(lent.id);
+    navigate(`/edit/${lent.id}`);
   };
   const DeleteServer = (lent) => {
-    console.log(lent.id);
+    console.log(lent);
   };
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      className={classes.root}
+    >
       <Table
-        className={classes.root}
         aria-label="simple table"
       >
         <TableHead className={classes.tableHead}>
@@ -60,8 +68,8 @@ function List() {
             <TableCell align="center">Action</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {list && list.map((item) => (
+        <TableBody className={classes.tbody}>
+          {data && data.map((item) => (
             <TableRow key={item.id}>
               <TableCell padding="checkbox">
                 <Checkbox />
@@ -74,6 +82,7 @@ function List() {
                 <Button onClick={() => DeleteServer(item)}><DeleteIcon /></Button>
               </TableCell>
             </TableRow>
+
           ))}
         </TableBody>
       </Table>
