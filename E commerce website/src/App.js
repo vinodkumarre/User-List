@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import EditPage from "./components/Edit";
 import "./App.css";
+// eslint-disable-next-line import/no-cycle
 import List from "./components/ListView";
 import SearchBar from "./components/SearchBar";
 import AddUser from "./components/AddUser";

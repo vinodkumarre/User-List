@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
-
-const ApiCall = (url) => {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    console.log(url);
-    fetch(url).then((response) => response.json()).then((list) => setData(list));
-  }, [url]);
-  return [data];
+const ApiCall = (url, method, reguestSucces) => {
+  fetch(url, {
+    method,
+  }).then((response) => response.json()).then(reguestSucces);
 };
 export default ApiCall;
