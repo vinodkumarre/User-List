@@ -22,6 +22,7 @@ function AddUser() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [file, setFile] = useState();
+  const [filepath, setFilePath] = useState();
 
   const handleName = (e) => {
     setName(e.target.value);
@@ -37,8 +38,9 @@ function AddUser() {
       name,
       email,
       role,
-      image: file,
+      image: filepath,
     };
+    console.log(file);
     fetch("https://node-postgres-sample.herokuapp.com/users", {
       method: "Post",
       body: JSON.stringify(newUser),
@@ -54,6 +56,7 @@ function AddUser() {
   const handleImage = (e) => {
     console.log(e.target.files);
     setFile(URL.createObjectURL(e.target.files[0]));
+    setFilePath(e.target.value);
   };
 
   const [open, setOpen] = useState(false);
