@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,7 +13,6 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ApiCall from "./ApiCall";
-// import EditPage from "./Edit";
 
 const useStyles = makeStyles({
   root: {
@@ -36,20 +35,27 @@ const useStyles = makeStyles({
   },
 });
 function List() {
-  const classes = useStyles();
-  const navigate = useNavigate();
-  const [data] = ApiCall("https://node-postgres-sample.herokuapp.com/users");
-  // useEffect(() => {
-  //   localStorage.setItem("data", JSON.stringify(data));
-  // }, [data]);
-  // const list = JSON.parse(localStorage.getItem("data"));
+  const [data, setData] = useState([]);
+  const reguestSucces = (list) => {
+    setData(list);
+  };
+  useEffect(() => {
+    ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
+  }, []);
   console.log(data);
+  const classes = useStyles();
+
+  const navigate = useNavigate();
   const buttonServer = (lent) => {
     console.log(lent.id);
     navigate(`/edit/${lent.id}`);
   };
   const DeleteServer = (lent) => {
-    console.log(lent);
+    fetch(`https://node-postgres-sample.herokuapp.com/users/${lent.id}`, { method: "Delete" }).then((resp) => {
+      if (resp.ok === true) {
+        ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
+      }
+    });
   };
   return (
     <TableContainer
@@ -66,6 +72,7 @@ function List() {
             <TableCell align="center">Email</TableCell>
             <TableCell align="center">Role</TableCell>
             <TableCell align="center">Action</TableCell>
+            <TableCell align="center">Image</TableCell>
           </TableRow>
         </TableHead>
         <TableBody className={classes.tbody}>
@@ -81,6 +88,8 @@ function List() {
                 <Button onClick={() => buttonServer(item)}><EditIcon /></Button>
                 <Button onClick={() => DeleteServer(item)}><DeleteIcon /></Button>
               </TableCell>
+              <TableCell align="center"><img src={item.image} alt="" /></TableCell>
+
             </TableRow>
 
           ))}
