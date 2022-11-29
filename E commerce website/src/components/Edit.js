@@ -18,9 +18,8 @@ import ApiCall from "./ApiCall";
 
 const useStyle = makeStyles({
   div: {
-    margin: "30%",
-    marginTop: "0%",
-    marginBottom: "0%",
+    width: "30%",
+    margin: "150px auto",
   },
 
 });
