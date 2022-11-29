@@ -12,27 +12,24 @@ import AddUser from "./components/AddUser";
 
 function App() {
   return (
-    <>
-      {/* <SearchBar /> */}
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={<List />}
-        />
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={<List />}
+      />
 
-        <Route
-          exact
-          path="/edit/:id"
-          element={<EditPage />}
-        />
-        <Route
-          exact
-          path="/addUser"
-          element={<AddUser />}
-        />
-      </Routes>
-    </>
+      <Route
+        exact
+        path="/edit/:id"
+        element={<EditPage />}
+      />
+      <Route
+        exact
+        path="/addUser"
+        element={<AddUser />}
+      />
+    </Routes>
   );
 }
 

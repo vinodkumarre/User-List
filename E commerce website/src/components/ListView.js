@@ -8,7 +8,6 @@ import TableContainer from "@mui/material/TableContainer";
 import { Paper } from "@mui/material";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -23,6 +22,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import ApiCall from "./ApiCall";
 
 const useStyles = makeStyles({
@@ -34,7 +35,7 @@ const useStyles = makeStyles({
     position: "fixed",
     left: "50%",
     transform: "translateX(-50%)",
-    height: "80vh !important",
+    height: "75vh !important",
 
   },
   tableHead: {
@@ -74,15 +75,19 @@ const useStyles = makeStyles({
     borderRadius: "4px",
     left: "50%",
     justifyContent: "space-between",
-    // backgroundColor: "black",
+  },
+  Box: {
+    width: "20%",
+    margin: "150px auto",
+    marginLeft: "500px",
   },
 });
 function List() {
   const [data, setData] = useState([]);
-  // const [role, setRole] = useState("");
   const [open, setOpen] = React.useState(false);
   const [opens, setOpens] = React.useState(false);
   const [filtered, setFiltered] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -99,25 +104,33 @@ function List() {
 
   const reguestSucces = (list) => {
     setData(list);
+    setIsLoading(false);
   };
   useEffect(() => {
     ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
   }, []);
   const classes = useStyles();
   const searchItem = (e) => {
+    setIsLoading(true);
     const input = e.target.value;
     if (input !== "") {
-      fetch(`https://node-postgres-sample.herokuapp.com/searchUsers/${input}`).then((resp) => resp.json()).then((item) => setFiltered(item));
+      fetch(`https://node-postgres-sample.herokuapp.com/searchUsers/${input}`).then((resp) => resp.json()).then((item) => {
+        setFiltered(item);
+        setIsLoading(false);
+      });
     } else {
       setFiltered(data);
       console.log(data);
     }
   };
   const handleChange = (e) => {
-    // setRole(e.target.value);
+    setIsLoading(true);
     const input = e.target.value;
     if (input !== "") {
-      fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then((item) => setFiltered(item));
+      fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then((item) => {
+        setFiltered(item);
+        setIsLoading(false);
+      });
     } else {
       setFiltered(data);
     }
@@ -180,7 +193,6 @@ function List() {
         >
           <TableHead className={classes.tableHead}>
             <TableRow>
-              <TableCell align="center" padding="checkbox"><Checkbox /></TableCell>
               <TableCell align="center">Name</TableCell>
               <TableCell align="center">Email</TableCell>
               <TableCell align="center">Role</TableCell>
@@ -188,62 +200,10 @@ function List() {
               <TableCell align="center">Image</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody className={classes.tbody}>
-            {filtered ? filtered.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell padding="checkbox">
-                  <Checkbox />
-                </TableCell>
-                <TableCell align="center">{item.name}</TableCell>
-                <TableCell align="center">{item.email}</TableCell>
-                <TableCell align="center">{item.role}</TableCell>
-                <TableCell align="center">
-                  <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
-                  <Button>
-                    <DeleteIcon onClick={handleClickOpen} />
-                    <Dialog
-                      open={open}
-                      onClose={handleClose}
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        Delete user
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                          Are you sure to DELETE the User
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={() => DeleteServer(item)}>
-                          ok
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-
-                  </Button>
-                </TableCell>
-                <TableCell align="center">
-                  <img
-                    src={item.imageurl}
-                    alt=""
-                    style={{
-                      marginTop: "12px",
-                      width: "50%",
-                      height: "100px",
-                      borderRadius: "4px",
-                    }}
-                  />
-
-                </TableCell>
-
-              </TableRow>
-            ))
-              : data.map((item) => (
+          {!isLoading ? (
+            <TableBody className={classes.tbody}>
+              {filtered ? filtered.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell padding="checkbox">
-                    <Checkbox />
-                  </TableCell>
                   <TableCell align="center">{item.name}</TableCell>
                   <TableCell align="center">{item.email}</TableCell>
                   <TableCell align="center">{item.role}</TableCell>
@@ -288,8 +248,60 @@ function List() {
                   </TableCell>
 
                 </TableRow>
-              ))}
-          </TableBody>
+              ))
+                : data.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="center">{item.name}</TableCell>
+                    <TableCell align="center">{item.email}</TableCell>
+                    <TableCell align="center">{item.role}</TableCell>
+                    <TableCell align="center">
+                      <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
+                      <Button>
+                        <DeleteIcon onClick={handleClickOpen} />
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            Delete user
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              Are you sure to DELETE the User
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleClose}>Cancel</Button>
+                            <Button onClick={() => DeleteServer(item)}>
+                              ok
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <img
+                        src={item.imageurl}
+                        alt=""
+                        style={{
+                          marginTop: "12px",
+                          width: "50%",
+                          height: "100px",
+                          borderRadius: "4px",
+                        }}
+                      />
+
+                    </TableCell>
+
+                  </TableRow>
+                ))}
+            </TableBody>
+          ) : (
+            <Box className={classes.Box}>
+              <CircularProgress />
+            </Box>
+          )}
 
         </Table>
 
