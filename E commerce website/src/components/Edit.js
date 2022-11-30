@@ -10,6 +10,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import ApiCall from "./ApiCall";
 
 const useStyle = makeStyles({
@@ -17,12 +20,41 @@ const useStyle = makeStyles({
     width: "30%",
     margin: "150px auto",
   },
+  Header: {
+    display: "flex",
+    justifyContent: "center",
+    margin: "25px auto",
+    fontSize: "25px",
+    backgroundColor: "rgba(0, 200, 146, 0.5)",
+    paddingLeft: "25px",
+    paddingRight: "25px",
+  },
+  textField: {
+    "& p": {
+      color: "red",
+    },
+
+  },
+  Box: {
+    position: "absolute",
+    left: "35%",
+    top: "25%",
+    zIndex: "1000",
+    height: "80%",
+    width: "50%",
+    "& span": {
+      width: "30% !important",
+      height: "30% !important",
+
+    },
+  },
 
 });
 function EditPage() {
   const prams = useParams();
   const classes = useStyle();
   const [open, setOpen] = React.useState(false);
+  const [openApi, setOpenApi] = useState(false);
   const [role, setRole] = React.useState("");
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -32,23 +64,21 @@ function EditPage() {
   const [textNameState, setTextNameHelper] = useState("");
   const [textRoleState, setTextRoleHelper] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isApiLoader, setIsApiLoader] = useState(false);
   const navigate = useNavigate();
 
-  const reguestSucces = (lists) => {
-    const list = lists.find((item) => item.id === +prams.id);
-    console.log(list);
-    if (list) {
-      setRole(list.role);
-      setName(list.name);
-      setEmail(list.email);
-      setImageUrl(list.imageurl);
-    }
-  };
-
   useEffect(() => {
+    const reguestSucces = (lists) => {
+      const list = lists.find((item) => item.id === +prams.id);
+      if (list) {
+        setRole(list.role);
+        setName(list.name);
+        setEmail(list.email);
+        setImageUrl(list.imageurl);
+      }
+    };
     ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
-  });
+  }, [prams.id]);
 
   const handleChange = (event) => {
     setRole(event.target.value);
@@ -63,13 +93,34 @@ function EditPage() {
   };
   const handleName = (e) => {
     setName(e.target.value);
+    if (e.target.value === "") {
+      setTextNameHelper("Please Enter Name");
+    } else {
+      setTextNameHelper("");
+    }
   };
   const handleEmail = (e) => {
     setEmail(e.target.value);
+    if (e.target.value === "") {
+      setTextEmailHelper("Please Enter Email");
+    } else {
+      setTextEmailHelper("");
+    }
+  };
+  const handleApiClose = () => {
+    setOpenApi(false);
+  };
+  const handleApiClickOpen = () => {
+    setOpenApi(true);
   };
 
   const handleImage = (e) => {
     setIsLoading(true);
+    if (e.target.value === "") {
+      setTextFileHelper("Please Select image");
+    } else {
+      setTextFileHelper("");
+    }
     const imageDate = new FormData();
     imageDate.append("file", e.target.files[0]);
     imageDate.append("upload_preset", "sq5otdxh");
@@ -80,7 +131,7 @@ function EditPage() {
     }).then((resp) => resp.json()).then((datas) => {
       setImageUrl(datas.url);
       setIsLoading(false);
-    }).catch((error) => { console.log(error); });
+    });
   };
   const backHandler = () => {
     navigate("/");
@@ -115,6 +166,7 @@ function EditPage() {
       setTextEmailHelper("");
     }
     if (name !== "" && email !== "" && role !== "" && imageurl !== "" && regex.test(email)) {
+      setIsApiLoader(true);
       const newUser = {
         name,
         email,
@@ -133,61 +185,86 @@ function EditPage() {
           setName("");
           setEmail("");
           setImageUrl("");
+          setIsApiLoader(false);
         }
       });
-      backHandler();
+      handleApiClickOpen();
     }
   };
   return (
-    <div className={classes.div}>
-      <TextField fullWidth label="Name" id="fullWidth" value={name} onChange={handleName} helperText={textNameState} />
-      <TextField fullWidth sx={{ marginTop: "12px", border: "none" }} label="Email" value={email} onChange={handleEmail} helperText={textEmailState} />
-      <FormControl fullWidth sx={{ marginTop: "12px", border: "none" }}>
-        <InputLabel />
-        <Select
-          open={open}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          value={role}
-          onChange={handleChange}
-        >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="member">Member</MenuItem>
-        </Select>
-        <FormHelperText>{textRoleState}</FormHelperText>
-      </FormControl>
-      <TextField fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} onChange={handleImage} helperText={textFileState} />
-      {
-        !isLoading ? (
-          <img
-            src={imageurl}
-            alt=""
-            style={{
+    <>
+      <div className={classes.div}>
+        <div className={classes.Header}>
+          EDIT USER DETAILS
+        </div>
+        <TextField className={classes.textField} fullWidth label="Name" id="fullWidth" value={name} onChange={handleName} helperText={textNameState} />
+        <TextField className={classes.textField} fullWidth sx={{ marginTop: "12px", border: "none" }} label="Email" value={email} onChange={handleEmail} helperText={textEmailState} />
+        <FormControl className={classes.textField} fullWidth sx={{ marginTop: "12px", border: "none" }}>
+          <InputLabel />
+          <Select
+            open={open}
+            onClose={handleClose}
+            onOpen={handleOpen}
+            value={role}
+            onChange={handleChange}
+          >
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="member">Member</MenuItem>
+          </Select>
+          <FormHelperText>{textRoleState}</FormHelperText>
+        </FormControl>
+        <TextField className={classes.textField} fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} onChange={handleImage} helperText={textFileState} />
+        {
+          !isLoading ? (
+            <img
+              src={imageurl}
+              alt=""
+              style={{
 
-              marginTop: "12px",
-              width: "50%",
-              height: "100px",
-              borderRadius: "4px",
+                marginTop: "12px",
+                width: "50%",
+                height: "100px",
+                borderRadius: "4px",
 
-            }}
-          />
+              }}
+            />
 
-        ) : (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
-        )
-      }
+          ) : (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress />
+            </Box>
+          )
+        }
 
-      <div>
-        <Button variant="contained" sx={{ margin: "12px" }} onClick={editHandler}>
-          Edit
-        </Button>
-        <Button variant="contained" sx={{ margin: "12px" }} onClick={backHandler}>
-          Back
-        </Button>
+        <div>
+          <Button variant="contained" sx={{ margin: "12px" }} onClick={editHandler}>
+            Edit
+          </Button>
+          <Button variant="contained" sx={{ margin: "12px" }} onClick={backHandler}>
+            Back
+          </Button>
+        </div>
       </div>
-    </div>
+      {!isApiLoader ? (
+        <Dialog
+          open={openApi}
+          disabled={isApiLoader}
+          onClose={handleApiClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Edit DETAILS Has Edited Successfull
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Box className={classes.Box}>
+          <CircularProgress />
+        </Box>
+      )}
+    </>
   );
 }
 export default EditPage;
