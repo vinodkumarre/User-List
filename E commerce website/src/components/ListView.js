@@ -24,6 +24,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import debounce from "lodash.debounce";
 import ApiCall from "./ApiCall";
 
 const useStyles = makeStyles({
@@ -120,9 +121,10 @@ function List() {
       });
     } else {
       setFiltered(data);
-      console.log(data);
     }
   };
+  const debouncedResults = (e) => debounce(searchItem(e), 400);
+
   const handleChange = (e) => {
     setIsLoading(true);
     const input = e.target.value;
@@ -134,6 +136,9 @@ function List() {
     } else {
       setFiltered(data);
     }
+    // if (input === "clearall") {
+    //   setFiltered(data);
+    // }
   };
 
   const navigate = useNavigate();
@@ -161,7 +166,7 @@ function List() {
             className={classes.input}
             placeholder="Search By name"
             inputProps={{ "aria-label": "search" }}
-            onChange={searchItem}
+            onChange={debouncedResults}
           />
           <SearchIcon className={classes.sarch} />
         </Paper>
@@ -177,6 +182,7 @@ function List() {
           >
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="member">Member</MenuItem>
+            <MenuItem value="clearall">Clear All</MenuItem>
           </Select>
         </FormControl>
         <div style={{ paddingRight: "25px" }}>
@@ -201,55 +207,9 @@ function List() {
             </TableRow>
           </TableHead>
           {!isLoading ? (
-            <TableBody className={classes.tbody}>
-              {filtered ? filtered.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell align="center">{item.name}</TableCell>
-                  <TableCell align="center">{item.email}</TableCell>
-                  <TableCell align="center">{item.role}</TableCell>
-                  <TableCell align="center">
-                    <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
-                    <Button>
-                      <DeleteIcon onClick={handleClickOpen} />
-                      <Dialog
-                        open={open}
-                        onClose={handleClose}
-                      >
-                        <DialogTitle id="alert-dialog-title">
-                          Delete user
-                        </DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-description">
-                            Are you sure to DELETE the User
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose}>Cancel</Button>
-                          <Button onClick={() => DeleteServer(item)}>
-                            ok
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center">
-                    <img
-                      src={item.imageurl}
-                      alt=""
-                      style={{
-                        marginTop: "12px",
-                        width: "50%",
-                        height: "100px",
-                        borderRadius: "4px",
-                      }}
-                    />
-
-                  </TableCell>
-
-                </TableRow>
-              ))
-                : data.map((item) => (
+            <TableBody>
+              {filtered ? (
+                filtered.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell align="center">{item.name}</TableCell>
                     <TableCell align="center">{item.email}</TableCell>
@@ -295,7 +255,56 @@ function List() {
                     </TableCell>
 
                   </TableRow>
-                ))}
+                ))
+              ) : (
+                data.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="center">{item.name}</TableCell>
+                    <TableCell align="center">{item.email}</TableCell>
+                    <TableCell align="center">{item.role}</TableCell>
+                    <TableCell align="center">
+                      <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
+                      <Button>
+                        <DeleteIcon onClick={handleClickOpen} />
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            Delete user
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              Are you sure to DELETE the User
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleClose}>Cancel</Button>
+                            <Button onClick={() => DeleteServer(item)}>
+                              ok
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+
+                      </Button>
+                    </TableCell>
+                    <TableCell align="center">
+                      <img
+                        src={item.imageurl}
+                        alt=""
+                        style={{
+                          marginTop: "12px",
+                          width: "50%",
+                          height: "100px",
+                          borderRadius: "4px",
+                        }}
+                      />
+
+                    </TableCell>
+
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           ) : (
             <Box className={classes.Box}>
@@ -307,7 +316,6 @@ function List() {
 
       </TableContainer>
     </>
-
   );
 }
 export default List;
