@@ -4,6 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import { Button } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,12 @@ const useStyle = makeStyles({
   div: {
     width: "30%",
     margin: "150px auto",
+  },
+  textField: {
+    "& p": {
+      color: "red",
+    },
+
   },
 
 });
@@ -28,6 +35,7 @@ function AddUser() {
   const [textEmailState, setTextEmailHelper] = useState("");
   const [textFileState, setTextFileHelper] = useState("");
   const [textNameState, setTextNameHelper] = useState("");
+  const [textRoleState, setTextRoleHelper] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const handleName = (e) => {
@@ -83,7 +91,9 @@ function AddUser() {
       setTextEmailHelper("");
     }
     if (role === "") {
-      console.log("please Enter Role");
+      setTextRoleHelper("please Enter Role");
+    } else {
+      setTextRoleHelper("");
     }
     if (imagechange === "") {
       setTextFileHelper("please upload image");
@@ -126,9 +136,9 @@ function AddUser() {
   const classes = useStyle();
   return (
     <div className={classes.div}>
-      <TextField fullWidth label="Name" id="fullWidth" onChange={handleName} helperText={textNameState} value={name} />
-      <TextField fullWidth sx={{ marginTop: "12px", border: "none" }} label="Email" value={email} onChange={handleEmail} helperText={textEmailState} />
-      <FormControl fullWidth sx={{ marginTop: "12px", border: "none" }}>
+      <TextField className={classes.textField} fullWidth label="Name" id="fullWidth" onChange={handleName} helperText={textNameState} value={name} />
+      <TextField fullWidth sx={{ marginTop: "12px", border: "none" }} className={classes.textField} label="Email" value={email} onChange={handleEmail} helperText={textEmailState} />
+      <FormControl fullWidth sx={{ marginTop: "12px", border: "none" }} className={classes.textField}>
         <InputLabel>Role</InputLabel>
         <Select
           open={open}
@@ -142,8 +152,9 @@ function AddUser() {
           <MenuItem value="admin">Admin</MenuItem>
           <MenuItem value="member">Member</MenuItem>
         </Select>
+        <FormHelperText>{textRoleState}</FormHelperText>
       </FormControl>
-      <TextField fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} onChange={handleImage} helperText={textFileState} />
+      <TextField fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} className={classes.textField} onChange={handleImage} helperText={textFileState} />
       {
         !isLoading ? (
           <img
