@@ -37,14 +37,17 @@ const useStyle = makeStyles({
   },
   Box: {
     position: "absolute",
-    left: "35%",
-    top: "25%",
+    left: "30%",
+    top: "35%",
     zIndex: "1000",
-    height: "80%",
-    width: "50%",
+    height: "30%",
+    width: "30%",
     "& span": {
+      display: "flex",
+      justifyContent: "center",
       width: "30% !important",
       height: "30% !important",
+      margin: "auto",
 
     },
   },
@@ -262,7 +265,7 @@ function AddUser() {
         >
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              DETAILS Has Successfully Added
+              User has been added successfully
             </DialogContentText>
           </DialogContent>
         </Dialog>
