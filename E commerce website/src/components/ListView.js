@@ -24,7 +24,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import debounce from "lodash.debounce";
+// import debounce from "lodash.debounce";
 import ApiCall from "./ApiCall";
 
 const useStyles = makeStyles({
@@ -120,10 +120,11 @@ function List() {
         setIsLoading(false);
       });
     } else {
+      setIsLoading(false);
       setFiltered(data);
     }
   };
-  const debouncedResults = (e) => debounce(searchItem(e), 400);
+  // const debouncedResults = (e) => debounce(searchItem(e), 400);
 
   const handleChange = (e) => {
     setIsLoading(true);
@@ -139,6 +140,14 @@ function List() {
       setIsLoading(false);
     }
   };
+  function debounce(func, timeout = 400) {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    };
+  }
+  const processChange = debounce((e) => searchItem(e));
 
   const navigate = useNavigate();
   const addUser = () => {
@@ -165,7 +174,7 @@ function List() {
             className={classes.input}
             placeholder="Search By name"
             inputProps={{ "aria-label": "search" }}
-            onChange={debouncedResults}
+            onChange={processChange}
           />
           <SearchIcon className={classes.sarch} />
         </Paper>
