@@ -128,17 +128,16 @@ function List() {
   const handleChange = (e) => {
     setIsLoading(true);
     const input = e.target.value;
-    if (input !== "") {
+    if (input === "admin" || input === "member") {
       fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then((item) => {
         setFiltered(item);
         setIsLoading(false);
       });
     } else {
+      // console.log();
       setFiltered(data);
+      setIsLoading(false);
     }
-    // if (input === "clearall") {
-    //   setFiltered(data);
-    // }
   };
 
   const navigate = useNavigate();
@@ -182,7 +181,7 @@ function List() {
           >
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="member">Member</MenuItem>
-            <MenuItem value="clearall">Clear All</MenuItem>
+            <MenuItem value="clearall">Select all Option</MenuItem>
           </Select>
         </FormControl>
         <div style={{ paddingRight: "25px" }}>
