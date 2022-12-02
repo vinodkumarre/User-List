@@ -24,7 +24,6 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-// import debounce from "lodash.debounce";
 import ApiCall from "./ApiCall";
 
 const useStyles = makeStyles({
@@ -224,8 +223,8 @@ function List() {
                     <TableCell align="center">{item.role}</TableCell>
                     <TableCell align="center">
                       <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
-                      <Button>
-                        <DeleteIcon onClick={handleClickOpen} />
+                      <Button onClick={handleClickOpen}>
+                        <DeleteIcon />
                         <Dialog
                           open={open}
                           onClose={handleClose}
@@ -240,7 +239,7 @@ function List() {
                           </DialogContent>
                           <DialogActions>
                             <Button onClick={handleClose}>Cancel</Button>
-                            <Button onClick={() => DeleteServer(item)}>
+                            <Button onClick={() => DeleteServer(item.id)}>
                               ok
                             </Button>
                           </DialogActions>
@@ -272,8 +271,8 @@ function List() {
                     <TableCell align="center">{item.role}</TableCell>
                     <TableCell align="center">
                       <Button><EditIcon onClick={() => buttonServer(item)} /></Button>
-                      <Button>
-                        <DeleteIcon onClick={handleClickOpen} />
+                      <Button onClick={handleClickOpen}>
+                        <DeleteIcon />
                         <Dialog
                           open={open}
                           onClose={handleClose}
