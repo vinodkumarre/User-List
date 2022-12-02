@@ -13,7 +13,11 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+// import { color } from "@mui/system";
 
+/**
+ *  useStyle function is used to make css style for material ui
+ */
 const useStyle = makeStyles({
 
   div: {
@@ -51,6 +55,20 @@ const useStyle = makeStyles({
 
     },
   },
+  imagetextField: {
+    width: "60% !important",
+    "& div": {
+      height: "70px",
+
+    },
+
+  },
+  image: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: "20px auto",
+  },
 
 });
 function AddUser() {
@@ -68,6 +86,10 @@ function AddUser() {
   const [isLoading, setIsLoading] = useState(false);
   const [isApiLoader, setIsApiLoader] = useState(false);
   const navigate = useNavigate();
+  /**
+   * handleName function is used to collect the state value for name input tag
+   * @handleName {e}
+   */
   const handleName = (e) => {
     setName(e.target.value);
     if (e.target.value === "") {
@@ -76,6 +98,10 @@ function AddUser() {
       setTextNameHelper("");
     }
   };
+  /**
+   * handleEmail function is used to collect the state value for email input tag
+   * @handleEmail {e}
+   */
   const handleEmail = (e) => {
     setEmail(e.target.value);
     if (e.target.value === "") {
@@ -84,6 +110,11 @@ function AddUser() {
       setTextEmailHelper("");
     }
   };
+  /**
+   * handleImage function is used to collect the state value for image input tag
+   * And send api to cloudinary
+   * @handleImage {e}
+   */
   const handleImage = (e) => {
     setImageChange(e.target.value);
     if (e.target.value === "") {
@@ -106,6 +137,10 @@ function AddUser() {
       setIsLoading(false);
     });
   };
+  /**
+   * handleChange function is used to collect the state value for Role input tag
+   * @handleChange {e}
+   */
   const handleChange = (event) => {
     setRole(event.target.value);
     if (event.target.value === "") {
@@ -114,6 +149,9 @@ function AddUser() {
       setTextRoleHelper("");
     }
   };
+  /**
+   * handleApiClose
+   */
 
   const handleApiClose = () => {
     setOpenApi(false);
@@ -124,13 +162,13 @@ function AddUser() {
   const handleOpen = () => {
     setOpen(true);
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const backHandler = () => {
     navigate("/");
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   const addUserHandler = () => {
     // eslint-disable-next-line no-useless-escape
     const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -150,6 +188,7 @@ function AddUser() {
       setTextRoleHelper("");
     }
     if (imagechange === "") {
+      // eslint-disable-next-line no-import-assign, no-undef
       setTextFileHelper("please upload image");
     } else {
       setTextFileHelper("");
@@ -176,7 +215,6 @@ function AddUser() {
         },
       }).then((resp) => {
         if (resp.ok === true) {
-          // handleClickOpen();
           setName("");
           setEmail("");
           setRole("");
@@ -213,26 +251,43 @@ function AddUser() {
           </Select>
           <FormHelperText>{textRoleState}</FormHelperText>
         </FormControl>
-        <TextField fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} className={classes.textField} onChange={handleImage} helperText={textFileState} />
-        {
-          !isLoading ? (
-            <img
-              src={imageurl}
-              alt="upload file"
-              disabled={isLoading}
-              style={{
-                marginTop: "12px",
-                width: "50%",
-                height: "100px",
-                borderRadius: "4px",
-              }}
-            />
-          ) : (
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          )
-        }
+        <div className={classes.image}>
+          <TextField type="file" className={classes.imagetextField} onChange={handleImage} helperText={textFileState} />
+          <div style={{
+            width: "30%",
+            height: "100px",
+            borderRadius: "4px",
+            border: "2px solid black",
+          }}
+          >
+            {
+              !isLoading ? (
+                <img
+                  alt="upload profile"
+                  src={imageurl}
+                  disabled={isLoading}
+                  style={{
+                    width: "100%",
+                    height: "100px",
+                  }}
+                />
+              ) : (
+                <Box sx={{
+                  display: "flex",
+                  margin: "25px auto",
+                  left: "30%",
+                  top: "35%",
+                  zIndex: "1000",
+                  height: "30%",
+                  width: "30%",
+                }}
+                >
+                  <CircularProgress />
+                </Box>
+              )
+            }
+          </div>
+        </div>
         <div>
           <Button
             variant="contained"

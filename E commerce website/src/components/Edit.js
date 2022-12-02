@@ -51,6 +51,20 @@ const useStyle = makeStyles({
 
     },
   },
+  imagetextField: {
+    width: "60% !important",
+    "& div": {
+      height: "70px",
+
+    },
+
+  },
+  image: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: "20px auto",
+  },
 
 });
 function EditPage() {
@@ -212,28 +226,46 @@ function EditPage() {
           </Select>
           <FormHelperText>{textRoleState}</FormHelperText>
         </FormControl>
-        <TextField className={classes.textField} fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} onChange={handleImage} helperText={textFileState} />
-        {
-          !isLoading ? (
-            <img
-              src={imageurl}
-              alt=""
-              style={{
+        <div className={classes.image}>
+          <TextField className={classes.imagetextField} fullWidth type="file" sx={{ marginTop: "12px", border: "none" }} onChange={handleImage} helperText={textFileState} />
+          <div style={{
+            width: "30%",
+            height: "100px",
+            borderRadius: "4px",
+            border: "2px solid black",
+          }}
+          >
 
-                marginTop: "12px",
-                width: "50%",
-                height: "100px",
-                borderRadius: "4px",
+            {
+              !isLoading ? (
+                <img
+                  src={imageurl}
+                  alt=""
+                  style={{
 
-              }}
-            />
+                    width: "100%",
+                    height: "100px",
 
-          ) : (
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          )
-        }
+                  }}
+                />
+
+              ) : (
+                <Box sx={{
+                  display: "flex",
+                  margin: "25px auto",
+                  left: "30%",
+                  top: "35%",
+                  zIndex: "1000",
+                  height: "30%",
+                  width: "30%",
+                }}
+                >
+                  <CircularProgress />
+                </Box>
+              )
+            }
+          </div>
+        </div>
 
         <div>
           <Button variant="contained" sx={{ margin: "12px" }} onClick={editHandler}>
