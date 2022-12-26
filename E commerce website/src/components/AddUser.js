@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import ApiCall from "./ApiCall";
 // import { color } from "@mui/system";
 
 /**
@@ -207,21 +208,15 @@ function AddUser() {
         role,
         imageurl,
       };
-      fetch("https://node-postgres-sample.herokuapp.com/users", {
-        method: "Post",
-        body: JSON.stringify(newUser),
-        headers: {
-          "Content-type": "application/json",
-        },
-      }).then((resp) => {
-        if (resp.ok === true) {
-          setName("");
-          setEmail("");
-          setRole("");
-          setImageurl("");
-          setImageChange("");
-          setIsApiLoader(false);
-        }
+      ApiCall("/users", "Post", () => {
+        setName("");
+        setEmail("");
+        setRole("");
+        setImageurl("");
+        setImageChange("");
+        setIsApiLoader(false);
+      }, JSON.stringify(newUser), {
+        "Content-type": "application/json",
       });
       handleApiClickOpen();
     }

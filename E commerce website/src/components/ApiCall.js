@@ -1,9 +1,11 @@
 const APIENDPOINT = "http://localhost:5050";
-const ApiCall = (url, method, reguestSucces) => {
+const ApiCall = (url, method, reguestSucces, body, headers) => {
   fetch(APIENDPOINT + url, {
     method,
+    body,
+    headers,
   }).then((response) => {
-    if (response.json) {
+    if (method === "Get") {
       return response.json();
     }
     return response;
