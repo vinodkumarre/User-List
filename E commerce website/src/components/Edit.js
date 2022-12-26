@@ -190,16 +190,8 @@ function EditPage() {
         role,
         imageurl,
       };
-      fetch(`https://node-postgres-sample.herokuapp.com/users/${prams.id}`, {
-        method: "Put",
-        body: JSON.stringify(newUser),
-        headers: {
-          "Content-type": "application/json",
-        },
-      }).then((resp) => {
-        if (resp.ok === true) {
-          setIsApiLoader(false);
-        }
+      ApiCall(`/users/${prams.id}`, "Put", () => setIsApiLoader(false), JSON.stringify(newUser), {
+        "Content-type": "application/json",
       });
       handleApiClickOpen();
     }

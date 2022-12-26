@@ -133,7 +133,6 @@ function List() {
         setFiltered(item);
         setIsLoading(false);
       });
-      // fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then(
     } else {
       // console.log();
       setFiltered(data);
