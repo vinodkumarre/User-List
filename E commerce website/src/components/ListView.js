@@ -107,14 +107,14 @@ function List() {
     setIsLoading(false);
   };
   useEffect(() => {
-    ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
+    ApiCall("/users", "Get", reguestSucces);
   }, []);
   const classes = useStyles();
   const searchItem = (e) => {
     setIsLoading(true);
     const input = e.target.value;
     if (input !== "") {
-      fetch(`https://node-postgres-sample.herokuapp.com/searchUsers/${input}`).then((resp) => resp.json()).then((item) => {
+      ApiCall(`/searchUsers/${input}`, "Get", (item) => {
         setFiltered(item);
         setIsLoading(false);
       });
@@ -129,10 +129,11 @@ function List() {
     setIsLoading(true);
     const input = e.target.value;
     if (input === "admin" || input === "member") {
-      fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then((item) => {
+      ApiCall(`/getUserByRole/${input}`, "Get", (item) => {
         setFiltered(item);
         setIsLoading(false);
       });
+      // fetch(`https://node-postgres-sample.herokuapp.com/getUserByRole/${input}`).then((resp) => resp.json()).then(
     } else {
       // console.log();
       setFiltered(data);
@@ -157,10 +158,9 @@ function List() {
   };
   const DeleteServer = (lent) => {
     console.log(lent);
-    fetch(`https://node-postgres-sample.herokuapp.com/users/${lent.id}`, { method: "Delete" }).then((resp) => {
-      if (resp.ok === true) {
-        ApiCall("https://node-postgres-sample.herokuapp.com/users", "Get", reguestSucces);
-      }
+    ApiCall(`/users/${lent.id}`, "Delete", (resp) => {
+      console.log(resp);
+      ApiCall("/users", "Get", reguestSucces);
     });
     handleClose();
   };
