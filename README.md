@@ -14,14 +14,17 @@ The project User List is an curd operation project usered to render all user lis
 ---
 If you are working on a project that a user needs to install or run locally in a machine, you should include the steps required to install your project.
 * First clone the project from my github repository.
-* [Git Hub ](https://github.com/vinodkumarre/simple-calculator "Simple Calculator")
+* [Git Hub ](https://github.com/vinodkumarre/User-List "User List")
 * open Terminal for the root folder.
-* Check Node version (node -v) type this command line in terminal
-* Install Node Modules (node -i) type this command line in terminal
-* Install MUI Modules (npm install @mui/material @emotion/react @emotion/styled) type this command in terminal
-* Use the command 'npm start' in terminal
-* Project will directly open in default browser(chrome)
-* It will run with localhost:3000    
+* Check Node version (node -v) type this command line in terminal.
+* Install Node Modules (node -i) type this command line in terminal.
+* Install MUI Modules (npm install @mui/material @emotion/react @emotion/styled) type this command in terminal.
+* Use the command 'npm start' in terminal.
+* Project will directly open in default browser(chrome).
+* It will run with localhost:3000.
+* Their is an BackEnd server.
+* Change the path to BackEnd, use node index.js command to run Backend Server.
+* It will run with localhost:5050.    
 ---
 # Project Images
   ### Home
